@@ -1,283 +1,296 @@
 import streamlit as st
 import pandas as pd
 
-from database import create_tables
-from database import get_connection
-
-# ============================================
-# LOAD CSS
-# ============================================
-
-def load_css():
-
-    with open("styles.css") as f:
-
-        st.markdown(
-            f"<style>{f.read()}</style>",
-            unsafe_allow_html=True
-        )
-
-# ============================================
+# =========================================================
 # PAGE CONFIG
-# ============================================
+# =========================================================
 
 st.set_page_config(
-    page_title="AABsys ATS",
-    page_icon="📋",
-    layout="wide"
+    page_title="AABSys Talent Management",
+    page_icon="🚀",
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
-# ============================================
-# LOAD STYLES
-# ============================================
-
-load_css()
-
-# ============================================
-# CREATE TABLES
-# ============================================
-
-create_tables()
-
-# ============================================
-# DATABASE CONNECTION
-# ============================================
-
-conn = get_connection()
-
-# ============================================
-# LOAD DATA
-# ============================================
-
-try:
-    df = pd.read_sql_query(
-        "SELECT * FROM candidates",
-        conn
-    )
-
-except:
-
-    df = pd.DataFrame()
-
-# ============================================
-# STATUS COUNTS
-# ============================================
-
-total_candidates = len(df)
-
-applied_count = 0
-interview_count = 0
-hired_count = 0
-rejected_count = 0
-
-if not df.empty and "Status" in df.columns:
-
-    applied_count = len(
-        df[df["Status"] == "Applied"]
-    )
-
-    interview_count = len(
-        df[
-            df["Status"].isin([
-                "HR Interview",
-                "Technical Round",
-                "Final Round"
-            ])
-        ]
-    )
-
-    hired_count = len(
-        df[df["Status"] == "Hired"]
-    )
-
-    rejected_count = len(
-        df[df["Status"] == "Rejected"]
-    )
-
-# ============================================
-# UNIQUE ROLES COUNT
-# ============================================
-
-if not df.empty and "Role" in df.columns:
-
-    total_roles = df["Role"].nunique()
-
-else:
-
-    total_roles = 0
-
-# ============================================
-# HEADER
-# ============================================
-
-st.markdown("""
-<div class="main-header">
-    <div class="main-title">
-        AABsys Talent Management
-    </div>
-    <div class="main-subtitle">
-        Smart Hiring Dashboard
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
-# ============================================
-# NAVIGATION
-# ============================================
+# =========================================================
+# PREMIUM UI STYLING
+# =========================================================
 
 st.markdown("""
 <style>
 
-.navigation-wrapper {
-    margin-top: 10px;
-    margin-bottom: 25px;
+/* =====================================================
+MAIN APP
+===================================================== */
+
+.stApp {
+    background-color: #f8fafc;
 }
 
-.stPageLink {
-    width: 100% !important;
+/* =====================================================
+HIDE STREAMLIT SIDEBAR
+===================================================== */
+
+[data-testid="stSidebar"] {
+    display: none;
 }
 
-.stPageLink a {
-
-    display: flex !important;
-
-    align-items: center !important;
-
-    justify-content: center !important;
-
-    width: 100% !important;
-
-    min-height: 60px !important;
-
-    background: white !important;
-
-    border-radius: 14px !important;
-
-    border: 1px solid #dbe4ee !important;
-
-    text-decoration: none !important;
-
-    color: #1e293b !important;
-
-    font-size: 18px !important;
-
-    font-weight: 600 !important;
-
-    box-shadow:
-        0px 2px 6px rgba(0,0,0,0.04);
-
-    transition: all 0.25s ease-in-out !important;
-
-    cursor: pointer !important;
+[data-testid="collapsedControl"] {
+    display: none;
 }
 
-.stPageLink a p {
-    margin: 0 !important;
-    padding: 0 !important;
-    text-decoration: none !important;
+/* =====================================================
+HEADINGS
+===================================================== */
+
+h1, h2, h3 {
+    color: #0f172a;
+    font-weight: 800;
 }
 
-.stPageLink a:hover {
+/* =====================================================
+PREMIUM NAVIGATION BUTTONS
+===================================================== */
 
+.stButton > button {
+    width: 100%;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+    border: 1px solid #dbeafe;
+    border-radius: 14px;
+    color: #0f172a;
+    font-weight: 700;
+    height: 52px;
+    font-size: 15px;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    margin-top: 2px;
+}
+
+.stButton > button:hover {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border: 1px solid #60a5fa;
+    color: #2563eb;
     transform: translateY(-2px);
-
-    border: 1px solid #4a90e2 !important;
-
-    color: #4a90e2 !important;
-
-    box-shadow:
-        0px 8px 18px rgba(74,144,226,0.15);
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.12);
 }
 
-.stPageLink a:active {
-    transform: scale(0.98);
+/* =====================================================
+METRIC CARDS
+===================================================== */
+
+[data-testid="stMetric"] {
+    background: white;
+    border: 1px solid #dbeafe;
+    padding: 22px;
+    border-radius: 18px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+
+/* =====================================================
+DATAFRAMES
+===================================================== */
+
+[data-testid="stDataFrame"] {
+    background: white;
+    border-radius: 18px;
+    border: 1px solid #dbeafe;
+    overflow: hidden;
+}
+
+/* =====================================================
+DIVIDERS
+===================================================== */
+
+hr {
+    border-color: #dbeafe;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown(
-    '<div class="navigation-wrapper">',
-    unsafe_allow_html=True
-)
-
-col1, col2, col3 = st.columns(3)
-
-# ============================================
-# DASHBOARD BUTTON
-# ============================================
-
-with col1:
-
-    st.page_link(
-        "app.py",
-        label="📊 Dashboard",
-        use_container_width=True
-    )
-
-# ============================================
-# CANDIDATES BUTTON
-# ============================================
-
-with col2:
-
-    st.page_link(
-        "pages/2_Candidates.py",
-        label="👥 Candidates",
-        use_container_width=True
-    )
-
-# ============================================
-# ADD CANDIDATE BUTTON
-# ============================================
-
-with col3:
-
-    st.page_link(
-        "pages/3_Add_Candidate.py",
-        label="➕ Add Candidate",
-        use_container_width=True
-    )
-
-st.markdown(
-    '</div>',
-    unsafe_allow_html=True
-)
-
-# ============================================
-# DASHBOARD TITLE
-# ============================================
+# =========================================================
+# MODERN PREMIUM HEADER
+# =========================================================
 
 st.markdown("""
-<div class="section-title">
-    📊 Dashboard Overview
+<div style='
+padding:40px;
+border-radius:24px;
+background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
+border:1px solid #cbd5e1;
+margin-bottom:20px;
+box-shadow:0 4px 18px rgba(0,0,0,0.04);
+'>
+
+<h1 style='
+margin:0;
+font-size:48px;
+color:#0f172a;
+font-weight:800;
+'>
+🚀 AABSys Talent Management
+</h1>
+
+<p style='
+font-size:20px;
+color:#334155;
+margin-top:12px;
+font-weight:500;
+'>
+AI Powered Recruitment, Candidate Tracking and Workforce Management Platform
+</p>
+
 </div>
 """, unsafe_allow_html=True)
 
-# ============================================
-# METRIC CARDS
-# ============================================
+# =========================================================
+# PREMIUM TOP NAVIGATION
+# =========================================================
 
-c1, c2, c3, c4, c5, c6 = st.columns(6)
+nav1, nav2, nav3, nav4, nav5 = st.columns(5)
 
-metrics = [
-    ("Total Roles", total_roles),
-    ("Candidates", total_candidates),
-    ("Applied", applied_count),
-    ("Interview", interview_count),
-    ("Hired", hired_count),
-    ("Rejected", rejected_count)
-]
+with nav1:
+    if st.button("📊 Dashboard", use_container_width=True):
+        st.switch_page("app.py")
 
-columns = [c1, c2, c3, c4, c5, c6]
+with nav2:
+    if st.button("👥 Candidates", use_container_width=True):
+        st.switch_page("pages/2_Candidates.py")
 
-for col, metric in zip(columns, metrics):
+with nav3:
+    if st.button("➕ Add Candidate", use_container_width=True):
+        st.switch_page("pages/3_Add_Candidate.py")
 
-    with col:
+with nav4:
+    if st.button("📋 MRF Management", use_container_width=True):
+        st.switch_page("pages/4_MRF_Management.py")
 
-        st.markdown(f"""
-        <div class="metric-card">
-            <div class="metric-label">{metric[0]}</div>
-            <div class="metric-value">{metric[1]}</div>
-        </div>
-        """, unsafe_allow_html=True)
+with nav5:
+    if st.button("📝 Create MRF", use_container_width=True):
+        st.switch_page("pages/5_Create_MRF.py")
+
+st.write("")
+st.divider()
+
+# =========================================================
+# DASHBOARD OVERVIEW
+# =========================================================
+
+st.header("📊 Dashboard Overview")
+
+st.write(
+    "Monitor hiring performance, recruitment pipeline and workforce activities."
+)
+
+st.write("")
+
+# =========================================================
+# METRICS SECTION
+# =========================================================
+
+m1, m2, m3, m4, m5, m6 = st.columns(6)
+
+with m1:
+    st.metric("Total Roles", 4)
+
+with m2:
+    st.metric("Candidates", 5)
+
+with m3:
+    st.metric("Applied", 0)
+
+with m4:
+    st.metric("Interview", 3)
+
+with m5:
+    st.metric("Hired", 1)
+
+with m6:
+    st.metric("Rejected", 1)
+
+st.write("")
+st.divider()
+
+# =========================================================
+# RECRUITMENT PIPELINE
+# =========================================================
+
+st.subheader("🚀 Recruitment Pipeline")
+
+pipeline_df = pd.DataFrame({
+    "Stage": ["Applied", "Interview", "Hired"],
+    "Count": [0, 3, 1]
+})
+
+st.dataframe(
+    pipeline_df,
+    use_container_width=True,
+    hide_index=True
+)
+
+st.write("")
+st.divider()
+
+# =========================================================
+# RECENT CANDIDATES
+# =========================================================
+
+st.subheader("👨‍💼 Recent Candidates")
+
+candidate_df = pd.DataFrame({
+
+    "Name": [
+        "Nikesh",
+        "Niramehs",
+        "Ghaghsa",
+        "Nijniji",
+        "Mjyuthi"
+    ],
+
+    "Role": [
+        "Business Analyst",
+        "Data Analyst",
+        "HR Executive",
+        "Python Developer",
+        "UI UX Designer"
+    ],
+
+    "Status": [
+        "Hired",
+        "HR Interview",
+        "Rejected",
+        "Final Round",
+        "Technical Round"
+    ],
+
+    "Experience": [
+        2,
+        3,
+        1,
+        4,
+        2
+    ],
+
+    "Location": [
+        "Bhubaneswar",
+        "Hyderabad",
+        "Chennai",
+        "Bangalore",
+        "Pune"
+    ]
+})
+
+st.dataframe(
+    candidate_df,
+    use_container_width=True,
+    hide_index=True
+)
+
+st.write("")
+st.divider()
+
+# =========================================================
+# FOOTER
+# =========================================================
+
+st.caption("© 2025 AABSys Talent Management")

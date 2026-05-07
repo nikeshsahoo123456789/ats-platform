@@ -2,8 +2,10 @@ import streamlit as st
 import pandas as pd
 import os
 
-from database import fetch_all
-from database import update_status
+from utils.database import (
+    fetch_all,
+    get_connection
+)
 
 # ============================================
 # PAGE CONFIG
@@ -16,12 +18,39 @@ st.set_page_config(
 )
 
 # ============================================
+# DATABASE CONNECTION
+# ============================================
+
+conn = get_connection()
+
+# ============================================
+# UPDATE STATUS FUNCTION
+# ============================================
+
+def update_status(candidate_id, new_status):
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        UPDATE candidates
+        SET Status = ?
+        WHERE id = ?
+        """,
+        (new_status, candidate_id)
+    )
+
+    conn.commit()
+
+# ============================================
 # PAGE TITLE
 # ============================================
 
 st.title("👥 Candidate Management")
 
-st.write("Manage candidate profiles and recruitment pipeline")
+st.write(
+    "Manage candidate profiles and recruitment pipeline"
+)
 
 # ============================================
 # LOAD DATA
@@ -36,14 +65,20 @@ columns = [
     "Role",
     "Experience",
     "Skills",
-    "Company",
+    "CurrentSalary",
+    "ExpectedSalary",
+    "ReferredBy",
+    "EmployeeID",
+    "Qualification",
     "Location",
-    "Resume",
     "Status",
-    "Created"
+    "Resume"
 ]
 
-df = pd.DataFrame(data, columns=columns)
+df = pd.DataFrame(
+    data,
+    columns=columns
+)
 
 # ============================================
 # EMPTY STATE
@@ -56,7 +91,7 @@ if df.empty:
     st.stop()
 
 # ============================================
-# TOP METRICS
+# METRICS
 # ============================================
 
 total_candidates = len(df)
@@ -82,37 +117,21 @@ rejected_count = len(
 m1, m2, m3, m4 = st.columns(4)
 
 with m1:
-
-    st.metric(
-        "Candidates",
-        total_candidates
-    )
+    st.metric("Candidates", total_candidates)
 
 with m2:
-
-    st.metric(
-        "Interview",
-        interview_count
-    )
+    st.metric("Interview", interview_count)
 
 with m3:
-
-    st.metric(
-        "Hired",
-        hired_count
-    )
+    st.metric("Hired", hired_count)
 
 with m4:
-
-    st.metric(
-        "Rejected",
-        rejected_count
-    )
+    st.metric("Rejected", rejected_count)
 
 st.divider()
 
 # ============================================
-# SEARCH + FILTERS
+# FILTERS
 # ============================================
 
 c1, c2, c3 = st.columns(3)
@@ -148,7 +167,7 @@ with c3:
     )
 
 # ============================================
-# APPLY SEARCH
+# APPLY FILTERS
 # ============================================
 
 if search:
@@ -161,19 +180,11 @@ if search:
         )
     ]
 
-# ============================================
-# APPLY ROLE FILTER
-# ============================================
-
 if role_filter != "All":
 
     df = df[
         df["Role"] == role_filter
     ]
-
-# ============================================
-# APPLY STATUS FILTER
-# ============================================
 
 if status_filter != "All":
 
@@ -188,34 +199,20 @@ if status_filter != "All":
 status_options = [
 
     "Applied",
-
     "HR Interview",
-
     "Technical Round",
-
     "Final Round",
-
     "Hired",
-
     "Rejected"
 ]
-
-# ============================================
-# STATUS COLORS
-# ============================================
 
 status_colors = {
 
     "Applied": "🟡",
-
     "HR Interview": "🔵",
-
     "Technical Round": "🟣",
-
     "Final Round": "🟠",
-
     "Hired": "🟢",
-
     "Rejected": "🔴"
 }
 
@@ -249,7 +246,7 @@ else:
         top1, top2 = st.columns([4,1])
 
         # ====================================
-        # LEFT SECTION
+        # LEFT
         # ====================================
 
         with top1:
@@ -269,21 +266,14 @@ else:
             c1, c2, c3 = st.columns(3)
 
             with c1:
-
-                st.write(
-                    f"💼 {row['Role']}"
-                )
+                st.write(f"💼 {row['Role']}")
 
             with c2:
-
-                st.write(
-                    f"📍 {row['Location']}"
-                )
+                st.write(f"📍 {row['Location']}")
 
             with c3:
-
                 st.write(
-                    f"🏢 {row['Company']}"
+                    f"🎓 {row['Qualification']}"
                 )
 
             st.write(
@@ -306,7 +296,7 @@ else:
             )
 
             # ====================================
-            # RESUME BUTTON
+            # RESUME
             # ====================================
 
             resume_path = row["Resume"]
@@ -341,7 +331,7 @@ else:
                 )
 
         # ====================================
-        # RIGHT SECTION
+        # RIGHT
         # ====================================
 
         with top2:

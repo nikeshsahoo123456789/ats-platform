@@ -1,237 +1,460 @@
-/* ============================================
-BODY BACKGROUND
-============================================ */
-
-body {
-    background: linear-gradient(to right,
-            #eef5ff,
-            #f7f9fc);
-}
-
-/* ============================================
-APP BACKGROUND
-============================================ */
+/* =========================================================
+   GLOBAL APP
+========================================================= */
 
 .stApp {
-    background-color: #f1f5f9;
+    background: #eef2f9;
+    color: #111827;
+    font-family: 'Inter', sans-serif;
 }
 
-/* ============================================
-REMOVE STREAMLIT HEADER BACKGROUND
-============================================ */
 
-[data-testid="stHeader"] {
-    background: white;
-}
-
-/* ============================================
-TOOLBAR POSITION
-============================================ */
-
-[data-testid="stToolbar"] {
-    right: 1rem;
-}
-
-/* ============================================
-MAIN CONTAINER
-============================================ */
+/* =========================================================
+   REMOVE STREAMLIT TOP GAP
+========================================================= */
 
 .block-container {
-    padding-top: 2rem;
-    padding-left: 3rem;
-    padding-right: 3rem;
-    padding-bottom: 2rem;
+    padding-top: 1rem !important;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
 }
 
-/* ============================================
-HEADINGS
-============================================ */
 
-h1,
-h2,
-h3 {
-    color: #1f2937;
+/* Hide Streamlit Header */
+
+header[data-testid="stHeader"] {
+    background: transparent;
+    height: 0px;
 }
 
-/* ============================================
-TOP HEADER PANEL
-============================================ */
 
-.main-header {
+/* Remove top whitespace */
+
+[data-testid="stToolbar"] {
+    display: none;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+section[data-testid="stSidebar"] {
 
     background:
-        linear-gradient(90deg,
-            #4a90e2,
-            #6fa8f5);
+        linear-gradient(180deg,
+            #071126 0%,
+            #0f172a 50%,
+            #111827 100%);
 
-    padding: 45px;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
 
-    border-radius: 20px;
+    padding-top: 18px;
 
-    text-align: center;
+    width: 270px !important;
+}
 
-    margin-bottom: 25px;
+
+/* Sidebar Text */
+
+section[data-testid="stSidebar"] * {
+    color: white !important;
+}
+
+
+/* Sidebar Main Title */
+
+.sidebar-title {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 30px;
+    color: white;
+}
+
+
+/* Sidebar Navigation */
+
+.stPageLink {
+
+    background: rgba(255, 255, 255, 0.04);
+
+    border-radius: 16px;
+
+    padding: 14px 18px;
+
+    margin-bottom: 14px;
+
+    transition: 0.3s ease;
+
+    border: 1px solid transparent;
+
+    font-size: 18px !important;
+
+    font-weight: 600 !important;
+}
+
+
+/* Hover Effect */
+
+.stPageLink:hover {
+
+    background:
+        linear-gradient(135deg,
+            #2563eb,
+            #4f46e5);
+
+    transform: translateX(6px);
+
+    box-shadow:
+        0 10px 25px rgba(37, 99, 235, 0.30);
+}
+
+
+/* Active Page */
+
+.stPageLink.active {
+
+    background:
+        linear-gradient(135deg,
+            #2563eb,
+            #4f46e5);
+}
+
+
+/* =========================================================
+   MAIN TOP HEADER
+========================================================= */
+
+.top-header {
+
+    background:
+        linear-gradient(135deg,
+            #0f172a,
+            #1e3a8a);
+
+    padding: 32px;
+
+    border-radius: 24px;
+
+    margin-bottom: 30px;
 
     color: white;
 
     box-shadow:
-        0px 4px 12px rgba(0, 0, 0, 0.08);
+        0 18px 40px rgba(15, 23, 42, 0.25);
 }
 
-/* ============================================
-HEADER TITLE
-============================================ */
 
-.main-title {
+/* Main Heading */
 
-    font-size: 54px;
+.top-header h1 {
 
-    font-weight: 700;
+    color: white !important;
 
-    margin-bottom: 8px;
+    font-size: 42px !important;
+
+    font-weight: 800 !important;
+
+    margin-bottom: 10px;
 }
 
-/* ============================================
-HEADER SUBTITLE
-============================================ */
 
-.main-subtitle {
+/* Subtitle */
+
+.top-header p {
+
+    color: rgba(255, 255, 255, 0.85);
 
     font-size: 18px;
 
-    opacity: 0.95;
+    margin: 0;
 }
 
-/* ============================================
-SECTION TITLE
-============================================ */
+
+/* =========================================================
+   SECTION TITLE
+========================================================= */
 
 .section-title {
 
-    font-size: 28px;
+    font-size: 30px;
 
     font-weight: 700;
 
-    color: #14213d;
+    color: #111827;
 
     margin-top: 20px;
 
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
-/* ============================================
-METRIC CARDS
-============================================ */
+
+/* =========================================================
+   DASHBOARD CARDS
+========================================================= */
 
 .metric-card {
 
     background: white;
 
-    padding: 25px;
+    border-radius: 24px;
 
-    border-radius: 18px;
+    padding: 28px;
 
-    text-align: center;
-
-    border: 1px solid #dbe4ee;
+    min-height: 140px;
 
     box-shadow:
-        0px 4px 10px rgba(0, 0, 0, 0.05);
+        0 10px 30px rgba(0, 0, 0, 0.06);
+
+    transition: 0.3s ease;
+
+    border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
-/* ============================================
-METRIC LABEL
-============================================ */
+
+.metric-card:hover {
+
+    transform: translateY(-6px);
+
+    box-shadow:
+        0 18px 40px rgba(37, 99, 235, 0.15);
+}
+
+
+/* Card Label */
 
 .metric-label {
 
-    font-size: 15px;
+    color: #6b7280;
 
-    color: #666;
+    font-size: 17px;
 
-    margin-bottom: 10px;
+    font-weight: 600;
+
+    margin-bottom: 12px;
 }
 
-/* ============================================
-METRIC VALUE
-============================================ */
+
+/* Card Value */
 
 .metric-value {
 
-    font-size: 42px;
+    font-size: 38px;
 
-    font-weight: 700;
+    font-weight: 800;
 
-    color: #14213d;
+    color: #111827;
 }
 
-/* ============================================
-INPUT FIELDS
-============================================ */
+
+/* =========================================================
+   FORM CONTAINER
+========================================================= */
+
+.form-card {
+
+    background: rgba(255, 255, 255, 0.92);
+
+    backdrop-filter: blur(12px);
+
+    padding: 38px;
+
+    border-radius: 28px;
+
+    box-shadow:
+        0 14px 40px rgba(0, 0, 0, 0.06);
+
+    border: 1px solid rgba(255, 255, 255, 0.5);
+
+    margin-top: 20px;
+}
+
+
+/* =========================================================
+   INPUTS
+========================================================= */
 
 .stTextInput input,
+.stNumberInput input,
 .stTextArea textarea,
-.stSelectbox div[data-baseweb="select"],
-.stNumberInput input {
+.stSelectbox div[data-baseweb="select"] {
 
-    background-color: white !important;
+    background: white !important;
 
-    border-radius: 10px !important;
+    border-radius: 16px !important;
 
-    border: 1px solid #cfd8e3 !important;
+    border: 1px solid #dbe4f0 !important;
+
+    min-height: 52px !important;
+
+    padding-left: 16px !important;
+
+    font-size: 15px !important;
+
+    transition: 0.2s ease;
 }
 
-/* ============================================
-DATAFRAME
-============================================ */
+
+/* Focus */
+
+.stTextInput input:focus,
+.stNumberInput input:focus,
+.stTextArea textarea:focus {
+
+    border: 1px solid #2563eb !important;
+
+    box-shadow:
+        0 0 0 4px rgba(37, 99, 235, 0.12) !important;
+}
+
+
+/* Textarea */
+
+.stTextArea textarea {
+
+    min-height: 130px !important;
+}
+
+
+/* =========================================================
+   LABELS
+========================================================= */
+
+label {
+
+    font-size: 15px !important;
+
+    font-weight: 700 !important;
+
+    color: #374151 !important;
+
+    margin-bottom: 8px !important;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.stButton>button {
+
+    background:
+        linear-gradient(135deg,
+            #2563eb,
+            #4f46e5) !important;
+
+    color: white !important;
+
+    border: none !important;
+
+    border-radius: 16px !important;
+
+    height: 54px !important;
+
+    padding: 0 34px !important;
+
+    font-size: 16px !important;
+
+    font-weight: 700 !important;
+
+    transition: 0.3s ease !important;
+
+    box-shadow:
+        0 12px 28px rgba(37, 99, 235, 0.28);
+}
+
+
+/* Hover */
+
+.stButton>button:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 18px 36px rgba(37, 99, 235, 0.35);
+}
+
+
+/* =========================================================
+   FILE UPLOADER
+========================================================= */
+
+[data-testid="stFileUploader"] {
+
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 22px;
+
+    border: 2px dashed #c7d2fe;
+}
+
+
+/* =========================================================
+   TABLES
+========================================================= */
 
 [data-testid="stDataFrame"] {
 
     background: white;
 
-    border-radius: 15px;
+    border-radius: 22px;
 
-    padding: 10px;
+    overflow: hidden;
 
-    border: 1px solid #dbe4ee;
+    border: 1px solid #e5e7eb;
 }
 
-/* ============================================
-BUTTONS
-============================================ */
 
-.stButton>button {
+/* =========================================================
+   ALERTS
+========================================================= */
 
-    background:
-        linear-gradient(90deg,
-            #4a90e2,
-            #6fa8f5);
+.stSuccess,
+.stAlert {
 
-    color: white;
-
-    border-radius: 10px;
-
-    border: none;
-
-    padding: 10px 20px;
-
-    font-weight: 600;
-
-    transition: 0.3s ease;
+    border-radius: 16px;
 }
 
-/* ============================================
-BUTTON HOVER
-============================================ */
 
-.stButton>button:hover {
+/* =========================================================
+   SCROLLBAR
+========================================================= */
 
-    background:
-        linear-gradient(90deg,
-            #3d7fd1,
-            #5c99ed);
+::-webkit-scrollbar {
+    width: 8px;
+}
 
-    color: white;
+::-webkit-scrollbar-thumb {
 
-    transform: translateY(-2px);
+    background: #94a3b8;
+
+    border-radius: 20px;
+}
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+@keyframes fadeUp {
+
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+.metric-card,
+.form-card,
+.top-header {
+
+    animation: fadeUp 0.5s ease;
 }

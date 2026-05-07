@@ -1,5 +1,6 @@
 import streamlit as st
 import sqlite3
+from utils.database import get_connection
 import os
 from datetime import datetime
 
@@ -25,7 +26,7 @@ conn = sqlite3.connect(
 cursor = conn.cursor()
 
 # ============================================
-# CREATE MRF TABLE
+# CREATE TABLE
 # ============================================
 
 cursor.execute("""
@@ -46,6 +47,8 @@ CREATE TABLE IF NOT EXISTS mrf_requests (
     reason TEXT,
 
     experience TEXT,
+
+    work_mode TEXT,
 
     jd_file TEXT,
 
@@ -68,53 +71,250 @@ if not os.path.exists("jd_files"):
     os.makedirs("jd_files")
 
 # ============================================
-# STYLING
+# SMART ROLE TEMPLATES
+# ============================================
+
+job_templates = {
+
+    "Data Analyst": {
+
+        "skills":
+        "SQL • Excel • Power BI • Python • Data Visualization",
+
+        "mode":
+        "Hybrid",
+
+        "experience":
+        "2-4 Years",
+
+        "department":
+        "Engineering",
+
+        "jd":
+        """
+Analyze business data, create interactive dashboards,
+generate reports, and provide insights using SQL,
+Excel and Power BI.
+"""
+    },
+
+    "Python Developer": {
+
+        "skills":
+        "Python • Django • APIs • SQL • Git",
+
+        "mode":
+        "Remote",
+
+        "experience":
+        "1-3 Years",
+
+        "department":
+        "Engineering",
+
+        "jd":
+        """
+Develop scalable backend applications using Python,
+integrate APIs, optimize databases and maintain
+high-performance systems.
+"""
+    },
+
+    "UI/UX Designer": {
+
+        "skills":
+        "Figma • Adobe XD • Wireframing • Prototyping",
+
+        "mode":
+        "Hybrid",
+
+        "experience":
+        "2-5 Years",
+
+        "department":
+        "Design",
+
+        "jd":
+        """
+Design modern interfaces, improve user experience,
+create wireframes and collaborate with development teams.
+"""
+    },
+
+    "HR Executive": {
+
+        "skills":
+        "Recruitment • ATS • Screening • Communication",
+
+        "mode":
+        "Onsite",
+
+        "experience":
+        "1-3 Years",
+
+        "department":
+        "HR",
+
+        "jd":
+        """
+Manage recruitment workflows, coordinate interviews,
+maintain employee records and support HR operations.
+"""
+    }
+}
+
+# ============================================
+# MODERN PREMIUM UI
 # ============================================
 
 st.markdown("""
 <style>
 
 /* ============================================
-BACKGROUND
+GLOBAL
 ============================================ */
 
 .stApp {
-    background-color: #f4f7fb;
+
+    background:
+        linear-gradient(
+            to bottom right,
+            #f6f9fc,
+            #edf3fa
+        );
+
+    font-family: 'Segoe UI', sans-serif;
 }
 
 /* ============================================
-SPACING
+MAIN CONTAINER
 ============================================ */
 
 .block-container {
 
-    padding-top: 1rem !important;
+    padding-top: 2rem !important;
 
-    padding-left: 2rem !important;
+    padding-left: 3rem !important;
 
-    padding-right: 2rem !important;
+    padding-right: 3rem !important;
 
-    padding-bottom: 2rem !important;
+    padding-bottom: 3rem !important;
+
+    max-width: 1550px;
 }
 
 /* ============================================
-FORM AREA
+TOP HERO
+============================================ */
+
+.hero {
+
+    background:
+        linear-gradient(
+            135deg,
+            #4a90e2,
+            #6ea8f1
+        );
+
+    padding: 42px;
+
+    border-radius: 28px;
+
+    color: white;
+
+    margin-bottom: 35px;
+
+    box-shadow:
+        0px 12px 30px rgba(74,144,226,0.22);
+}
+
+.hero-title {
+
+    font-size: 44px;
+
+    font-weight: 800;
+
+    margin-bottom: 10px;
+}
+
+.hero-sub {
+
+    font-size: 18px;
+
+    opacity: 0.95;
+}
+
+/* ============================================
+METRIC CARDS
+============================================ */
+
+[data-testid="metric-container"] {
+
+    background: white;
+
+    padding: 28px;
+
+    border-radius: 22px;
+
+    border: 1px solid #e5edf5;
+
+    box-shadow:
+        0px 6px 18px rgba(0,0,0,0.04);
+
+    transition: 0.3s;
+}
+
+[data-testid="metric-container"]:hover {
+
+    transform: translateY(-4px);
+}
+
+/* ============================================
+FORM CONTAINER
 ============================================ */
 
 .form-container {
 
     background: white;
 
-    padding: 30px;
+    padding: 45px;
 
-    border-radius: 20px;
+    border-radius: 30px;
 
-    border: 1px solid #dbe4ee;
+    border: 1px solid #e5edf5;
 
     box-shadow:
-        0px 4px 18px rgba(0,0,0,0.05);
+        0px 12px 28px rgba(0,0,0,0.05);
 
-    margin-top: 20px;
+    margin-top: 25px;
+}
+
+/* ============================================
+SECTION TITLE
+============================================ */
+
+.section-title {
+
+    font-size: 30px;
+
+    font-weight: 800;
+
+    color: #1f2937;
+
+    margin-bottom: 35px;
+}
+
+/* ============================================
+LABELS
+============================================ */
+
+label {
+
+    font-size: 15px !important;
+
+    font-weight: 700 !important;
+
+    color: #344054 !important;
 }
 
 /* ============================================
@@ -124,42 +324,83 @@ INPUTS
 .stTextInput input,
 .stNumberInput input {
 
-    border-radius: 10px !important;
+    height: 62px !important;
 
-    border: 1px solid #d6dfeb !important;
+    border-radius: 16px !important;
 
-    height: 50px !important;
-}
+    border: 1px solid #d9e2ec !important;
 
-.stTextArea textarea {
+    background: #fbfdff !important;
 
-    border-radius: 10px !important;
+    padding-left: 18px !important;
 
-    border: 1px solid #d6dfeb !important;
-}
-
-.stSelectbox div[data-baseweb="select"] {
-
-    border-radius: 10px !important;
-
-    border: 1px solid #d6dfeb !important;
-
-    min-height: 50px !important;
+    font-size: 15px !important;
 }
 
 /* ============================================
-UPLOAD
+SELECTBOX
+============================================ */
+
+.stSelectbox div[data-baseweb="select"] {
+
+    min-height: 62px !important;
+
+    border-radius: 16px !important;
+
+    border: 1px solid #d9e2ec !important;
+
+    background: #fbfdff !important;
+
+    font-size: 15px !important;
+}
+
+/* ============================================
+TEXT AREA
+============================================ */
+
+.stTextArea textarea {
+
+    border-radius: 18px !important;
+
+    border: 1px solid #d9e2ec !important;
+
+    background: #fbfdff !important;
+
+    padding: 20px !important;
+
+    font-size: 15px !important;
+
+    line-height: 1.8 !important;
+}
+
+/* ============================================
+UPLOAD BOX
 ============================================ */
 
 [data-testid="stFileUploader"] {
 
-    background: white;
+    border-radius: 18px;
 
-    border: 1px solid #d6dfeb;
+    border: 2px dashed #c7d7ea;
 
-    border-radius: 12px;
+    background: #f9fbff;
 
-    padding: 12px;
+    padding: 25px;
+}
+
+/* ============================================
+INFO BOX
+============================================ */
+
+[data-testid="stAlert"] {
+
+    border-radius: 18px;
+
+    padding: 18px;
+
+    border: none;
+
+    background: #eef5ff;
 }
 
 /* ============================================
@@ -179,40 +420,84 @@ BUTTON
 
     border: none;
 
-    border-radius: 12px;
+    border-radius: 18px;
 
-    height: 52px;
+    height: 64px;
 
     width: 100%;
 
-    font-size: 16px;
+    font-size: 18px;
 
     font-weight: 700;
+
+    margin-top: 20px;
+
+    box-shadow:
+        0px 10px 20px rgba(74,144,226,0.25);
+
+    transition: 0.3s;
 }
 
 .stButton button:hover {
 
-    transform: translateY(-1px);
+    transform: translateY(-3px);
 
     box-shadow:
-        0px 8px 18px rgba(74,144,226,0.20);
+        0px 14px 30px rgba(74,144,226,0.35);
+}
+
+/* ============================================
+SPACING
+============================================ */
+
+div[data-testid="column"] {
+
+    padding-left: 12px;
+
+    padding-right: 12px;
+}
+
+/* ============================================
+DIVIDER
+============================================ */
+
+hr {
+
+    margin-top: 35px;
+
+    margin-bottom: 35px;
+
+    border: none;
+
+    border-top: 1px solid #edf2f7;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
 # ============================================
-# PAGE HEADER
+# HERO SECTION
 # ============================================
 
-st.title("📄 MRF Management")
+st.markdown("""
 
-st.caption(
-    "Create and manage manpower requisition forms"
-)
+<div class="hero">
+
+<div class="hero-title">
+📄 Smart MRF Management
+</div>
+
+<div class="hero-sub">
+Create intelligent manpower requisition forms
+with AI-powered hiring assistance
+</div>
+
+</div>
+
+""", unsafe_allow_html=True)
 
 # ============================================
-# TOP METRICS
+# METRICS
 # ============================================
 
 cursor.execute(
@@ -238,21 +523,21 @@ m1, m2, m3 = st.columns(3)
 with m1:
 
     st.metric(
-        "Total MRF",
+        "📋 Total MRF",
         total_mrf
     )
 
 with m2:
 
     st.metric(
-        "Open Positions",
+        "🟢 Open Positions",
         open_mrf
     )
 
 with m3:
 
     st.metric(
-        "Closed Positions",
+        "🔴 Closed Positions",
         closed_mrf
     )
 
@@ -265,37 +550,68 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.subheader("➕ Create New MRF")
+st.markdown(
+    '<div class="section-title">➕ Create Smart MRF</div>',
+    unsafe_allow_html=True
+)
 
 # ============================================
-# ROW 1
+# ROLE SELECTION
 # ============================================
 
 col1, col2 = st.columns(2)
 
 with col1:
 
-    position = st.text_input(
+    position = st.selectbox(
+
         "Position Title",
-        placeholder="Software Engineer"
+
+        list(job_templates.keys())
     )
+
+    selected_template = job_templates[position]
 
 with col2:
 
     department = st.selectbox(
+
         "Department",
+
         [
             "Engineering",
             "HR",
             "Finance",
             "Operations",
             "Marketing",
-            "Sales"
-        ]
+            "Sales",
+            "Design"
+        ],
+
+        index=[
+            "Engineering",
+            "HR",
+            "Finance",
+            "Operations",
+            "Marketing",
+            "Sales",
+            "Design"
+        ].index(
+            selected_template["department"]
+        )
     )
 
 # ============================================
-# ROW 2
+# AI SKILL SUGGESTION
+# ============================================
+
+st.info(
+    f"💡 Suggested Skills: "
+    f"{selected_template['skills']}"
+)
+
+# ============================================
+# SECOND ROW
 # ============================================
 
 col3, col4 = st.columns(2)
@@ -307,7 +623,10 @@ with col3:
         [
             "Bhubaneswar",
             "Berhampur",
-            "Balasore"
+            "Balasore",
+            "Bangalore",
+            "Hyderabad",
+            "Pune"
         ]
     )
 
@@ -322,7 +641,7 @@ with col4:
     )
 
 # ============================================
-# ROW 3
+# THIRD ROW
 # ============================================
 
 col5, col6 = st.columns(2)
@@ -337,18 +656,27 @@ with col5:
 
 with col6:
 
-    reason = st.selectbox(
-        "Reason for Recruitment",
+    work_mode = st.selectbox(
+
+        "Work Mode",
+
         [
-            "New Position",
-            "Replacement",
-            "Project Requirement",
-            "Expansion Hiring"
-        ]
+            "Remote",
+            "Hybrid",
+            "Onsite"
+        ],
+
+        index=[
+            "Remote",
+            "Hybrid",
+            "Onsite"
+        ].index(
+            selected_template["mode"]
+        )
     )
 
 # ============================================
-# ROW 4
+# FOURTH ROW
 # ============================================
 
 col7, col8 = st.columns(2)
@@ -363,21 +691,43 @@ with col7:
 with col8:
 
     experience = st.text_input(
+
         "Minimum Experience",
-        placeholder="Example: 3 Years"
+
+        value=selected_template["experience"]
     )
+
+# ============================================
+# REASON
+# ============================================
+
+reason = st.selectbox(
+
+    "Reason for Recruitment",
+
+    [
+        "New Position",
+        "Replacement",
+        "Project Requirement",
+        "Expansion Hiring"
+    ]
+)
 
 # ============================================
 # DESCRIPTION
 # ============================================
 
 description = st.text_area(
+
     "Job Description",
-    placeholder="Enter detailed job description..."
+
+    value=selected_template["jd"],
+
+    height=220
 )
 
 # ============================================
-# SAVE JD FILE
+# FILE SAVE
 # ============================================
 
 jd_path = ""
@@ -397,65 +747,59 @@ if jd_file is not None:
 # ============================================
 
 create = st.button(
-    "🚀 Create MRF"
+    "🚀 Create Smart MRF"
 )
 
 # ============================================
-# SAVE MRF
+# SAVE TO DATABASE
 # ============================================
 
 if create:
 
-    if position == "":
+    cursor.execute("""
+    INSERT INTO mrf_requests (
 
-        st.warning(
-            "Please enter position title."
-        )
+        position,
+        department,
+        branch,
+        candidate_type,
+        vacancies,
+        reason,
+        experience,
+        work_mode,
+        jd_file,
+        description,
+        status,
+        created_date
 
-    else:
+    )
 
-        cursor.execute("""
-        INSERT INTO mrf_requests (
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 
-            position,
-            department,
-            branch,
-            candidate_type,
-            vacancies,
-            reason,
-            experience,
-            jd_file,
-            description,
-            status,
-            created_date
+    """, (
 
-        )
+        position,
+        department,
+        branch,
+        candidate_type,
+        vacancies,
+        reason,
+        experience,
+        work_mode,
+        jd_path,
+        description,
+        "Open",
+        datetime.now().strftime("%Y-%m-%d")
 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ))
 
-        """, (
+    conn.commit()
 
-            position,
-            department,
-            branch,
-            candidate_type,
-            vacancies,
-            reason,
-            experience,
-            jd_path,
-            description,
-            "Open",
-            datetime.now().strftime("%Y-%m-%d")
+    st.success(
+        "✅ Smart MRF Created Successfully!"
+    )
 
-        ))
-
-        conn.commit()
-
-        st.success(
-            "✅ MRF Created Successfully!"
-        )
-
-        st.balloons()
+    st.balloons()
 
 st.markdown(
     '</div>',

@@ -1,28 +1,28 @@
 import streamlit as st
 import sqlite3
+from utils.database import get_connection
 import os
 
-# ============================================
+# =====================================================
 # PAGE CONFIG
-# ============================================
+# =====================================================
 
 st.set_page_config(
     page_title="Add Candidate",
-    page_icon="➕",
+    page_icon="🚀",
     layout="wide"
 )
 
-# ============================================
+# =====================================================
 # CREATE RESUME FOLDER
-# ============================================
+# =====================================================
 
 if not os.path.exists("resumes"):
-
     os.makedirs("resumes")
 
-# ============================================
+# =====================================================
 # DATABASE CONNECTION
-# ============================================
+# =====================================================
 
 conn = sqlite3.connect(
     "candidates.db",
@@ -31,370 +31,322 @@ conn = sqlite3.connect(
 
 cursor = conn.cursor()
 
-# ============================================
-# CREATE TABLE
-# ============================================
-
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS candidates (
-
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-    Name TEXT,
-
-    Phone TEXT,
-
-    Email TEXT,
-
-    Role TEXT,
-
-    Experience TEXT,
-
-    Skills TEXT,
-
-    PreviousCompany TEXT,
-
-    CurrentSalary TEXT,
-
-    ExpectedSalary TEXT,
-
-    ReferredBy TEXT,
-
-    EmployeeID TEXT,
-
-    Qualification TEXT,
-
-    Location TEXT,
-
-    Status TEXT,
-
-    Resume TEXT
-)
-""")
-
-conn.commit()
-
-# ============================================
-# STYLING
-# ============================================
+# =====================================================
+# PREMIUM CSS
+# =====================================================
 
 st.markdown("""
+
 <style>
 
-/* ============================================
-BACKGROUND
-============================================ */
-
 .stApp {
-    background-color: #f4f7fb;
-}
-
-/* ============================================
-REMOVE TOP SPACE
-============================================ */
-
-header {
-    background: transparent !important;
-}
-
-div[data-testid="stDecoration"] {
-    display: none !important;
+    background: #f4f7fb;
 }
 
 .block-container {
 
-    padding-top: 1rem !important;
+    max-width: 1500px;
 
-    padding-left: 2rem !important;
+    padding-top: 2rem;
 
-    padding-right: 2rem !important;
+    padding-left: 4rem;
 
-    padding-bottom: 2rem !important;
+    padding-right: 4rem;
+
+    padding-bottom: 4rem;
 }
 
-/* ============================================
-FORM CONTAINER
-============================================ */
+/* HEADER */
 
-.form-container {
+.main-title {
+
+    font-size: 42px;
+
+    font-weight: 800;
+
+    color: #0f172a;
+
+    margin-bottom: 8px;
+}
+
+.sub-title {
+
+    font-size: 15px;
+
+    color: #64748b;
+
+    margin-bottom: 35px;
+}
+
+/* METRICS */
+
+div[data-testid="metric-container"] {
 
     background: white;
 
-    padding: 30px;
-
     border-radius: 20px;
 
-    border: 1px solid #d9e3ef;
+    padding: 24px;
+
+    border: 1px solid #e2e8f0;
 
     box-shadow:
-        0 4px 18px rgba(0,0,0,0.05);
-
-    margin-top: 20px;
-
-    margin-bottom: 25px;
+        0 8px 24px rgba(15,23,42,0.04);
 }
 
-/* ============================================
-LABELS
-============================================ */
+/* FORM CARD */
+
+.form-card {
+
+    background: white;
+
+    border-radius: 30px;
+
+    padding: 50px;
+
+    border: 1px solid #e2e8f0;
+
+    box-shadow:
+        0 18px 40px rgba(15,23,42,0.05);
+
+    margin-top: 35px;
+}
+
+/* SECTION TITLE */
+
+.section-title {
+
+    font-size: 32px;
+
+    font-weight: 700;
+
+    color: #0f172a;
+
+    margin-bottom: 40px;
+}
+
+/* LABELS */
 
 label {
 
+    font-size: 14px !important;
+
     font-weight: 700 !important;
 
-    color: #1e293b !important;
-
-    font-size: 14px !important;
+    color: #334155 !important;
 }
 
-/* ============================================
-TEXT INPUTS
-============================================ */
+/* COLUMN SPACING */
 
-.stTextInput input {
+div[data-testid="column"] {
+
+    padding-left: 12px;
+
+    padding-right: 12px;
+}
+
+/* INPUTS */
+
+.stTextInput input,
+.stSelectbox div[data-baseweb="select"] > div {
 
     background: white !important;
 
-    border: 1px solid #d6dfeb !important;
+    border: 1px solid #dbe4ee !important;
 
-    border-radius: 10px !important;
+    border-radius: 14px !important;
 
-    height: 52px !important;
+    height: 54px !important;
 
-    padding-left: 15px !important;
+    padding-left: 16px !important;
 
     font-size: 15px !important;
 
-    color: #0f172a !important;
+    margin-bottom: 20px !important;
 }
 
-/* ============================================
-TEXT AREA
-============================================ */
+/* TEXTAREA */
 
 .stTextArea textarea {
 
     background: white !important;
 
-    border: 1px solid #d6dfeb !important;
+    border: 1px solid #dbe4ee !important;
 
-    border-radius: 10px !important;
+    border-radius: 16px !important;
+
+    min-height: 160px !important;
+
+    padding: 16px !important;
 
     font-size: 15px !important;
 
-    padding: 15px !important;
-
-    color: #0f172a !important;
+    margin-bottom: 20px !important;
 }
 
-/* ============================================
-SELECT BOX
-============================================ */
+/* FOCUS */
 
-.stSelectbox div[data-baseweb="select"] {
+.stTextInput input:focus,
+.stTextArea textarea:focus {
 
-    background: white !important;
+    border: 1px solid #6366f1 !important;
 
-    border: 1px solid #d6dfeb !important;
-
-    border-radius: 10px !important;
-
-    min-height: 52px !important;
+    box-shadow:
+        0 0 0 4px rgba(99,102,241,0.10) !important;
 }
 
-/* ============================================
-FILE UPLOADER
-============================================ */
+/* FILE */
 
 [data-testid="stFileUploader"] {
 
-    background: white;
+    background: #f8fafc !important;
 
-    border: 1px solid #d6dfeb;
+    border: 2px dashed #cbd5e1 !important;
 
-    border-radius: 14px;
+    border-radius: 18px !important;
 
-    padding: 14px;
+    padding: 25px !important;
+
+    margin-top: 15px;
 }
 
-/* ============================================
-BUTTON
-============================================ */
+/* BUTTON */
 
 .stButton button {
+
+    width: 100%;
+
+    height: 58px;
+
+    border-radius: 16px;
+
+    border: none !important;
 
     background:
         linear-gradient(
             135deg,
-            #4a90e2,
-            #6ea8f1
-        );
+            #4f46e5,
+            #7c3aed
+        ) !important;
 
-    color: white;
+    color: white !important;
 
-    border: none;
+    font-size: 16px !important;
 
-    border-radius: 12px;
+    font-weight: 700 !important;
 
-    height: 54px;
-
-    width: 100%;
-
-    font-size: 17px;
-
-    font-weight: 700;
-
-    transition: 0.3s;
-}
-
-.stButton button:hover {
-
-    transform: translateY(-2px);
-
-    box-shadow:
-        0 8px 18px rgba(74,144,226,0.25);
+    margin-top: 15px;
 }
 
 </style>
+
 """, unsafe_allow_html=True)
 
-# ============================================
+# =====================================================
 # HEADER
-# ============================================
+# =====================================================
 
-st.title("🚀 AABsys Talent Management")
+st.markdown("""
 
-st.caption("Smart Hiring Dashboard")
+<div class="main-title">
+🚀 AABsys Talent Management
+</div>
 
-# ============================================
-# TOTAL CANDIDATES
-# ============================================
+<div class="sub-title">
+Professional ATS Candidate Management Dashboard
+</div>
 
-cursor.execute(
-    "SELECT COUNT(*) FROM candidates"
-)
+""", unsafe_allow_html=True)
+
+# =====================================================
+# METRICS
+# =====================================================
+
+cursor.execute("SELECT COUNT(*) FROM candidates")
 
 total_candidates = cursor.fetchone()[0]
 
-# ============================================
-# TOP METRICS
-# ============================================
+m1, m2, m3 = st.columns(3)
 
-c1, c2, c3 = st.columns(3)
+with m1:
+    st.metric("Total Candidates", total_candidates)
 
-with c1:
+with m2:
+    st.metric("Resume Support", "PDF / DOCX")
 
-    st.metric(
-        "Total Candidates",
-        total_candidates
-    )
+with m3:
+    st.metric("ATS Status", "Active")
 
-with c2:
+# =====================================================
+# FORM CARD
+# =====================================================
 
-    st.metric(
-        "Resume Support",
-        "PDF / DOCX"
-    )
+st.markdown('<div class="form-card">', unsafe_allow_html=True)
 
-with c3:
+st.markdown("""
 
-    st.metric(
-        "ATS Status",
-        "Active"
-    )
+<div class="section-title">
+➕ Add New Candidate
+</div>
 
-# ============================================
-# PAGE TITLE
-# ============================================
+""", unsafe_allow_html=True)
 
-st.subheader("➕ Add New Candidate")
+# =====================================================
+# FORM
+# =====================================================
 
-# ============================================
-# FORM CONTAINER
-# ============================================
+left, right = st.columns(2, gap="large")
 
-st.markdown(
-    '<div class="form-container">',
-    unsafe_allow_html=True
-)
+# =====================================================
+# LEFT SIDE
+# =====================================================
 
-# ============================================
-# FORM LAYOUT
-# ============================================
-
-col1, col2 = st.columns(2)
-
-# ============================================
-# LEFT COLUMN
-# ============================================
-
-with col1:
+with left:
 
     candidate_name = st.text_input(
-        "Candidate Full Name",
-        placeholder="Enter candidate full name"
-    )
-
-    phone = st.text_input(
-        "Phone Number",
-        placeholder="Enter mobile number"
+        "Candidate Full Name"
     )
 
     applied_role = st.text_input(
-        "Applied Job Role",
-        placeholder="Example: Data Analyst"
+        "Applied Job Role"
     )
 
     skills = st.text_area(
-        "Skills / Technologies",
-        placeholder="Python, SQL, Power BI, Excel...",
-        height=100
+        "Skills / Technologies"
     )
 
     current_salary = st.text_input(
-        "Current Salary",
-        placeholder="₹ Current salary"
+        "Current Salary"
     )
 
     referred_by = st.text_input(
-        "Referred By",
-        placeholder="Employee / Consultant Name"
+        "Referred By"
     )
 
     qualification = st.text_input(
-        "Highest Qualification",
-        placeholder="MBA / B.Tech / MCA"
+        "Highest Qualification"
     )
 
-# ============================================
-# RIGHT COLUMN
-# ============================================
+# =====================================================
+# RIGHT SIDE
+# =====================================================
 
-with col2:
+with right:
 
     email = st.text_input(
-        "Email Address",
-        placeholder="Enter email address"
+        "Email Address"
     )
 
     experience = st.text_input(
-        "Experience (Years)",
-        placeholder="Example: 4 Years"
-    )
-
-    previous_company = st.text_input(
-        "Previous Company",
-        placeholder="Enter previous company"
+        "Experience (Years)"
     )
 
     expected_salary = st.text_input(
-        "Expected Salary",
-        placeholder="₹ Expected salary"
+        "Expected Salary"
     )
 
     employee_id = st.text_input(
-        "Employee ID",
-        placeholder="Internal employee ID"
+        "Employee ID"
     )
 
     location = st.selectbox(
@@ -402,29 +354,26 @@ with col2:
         [
             "Bhubaneswar",
             "Berhampur",
-            "Balasore"
+            "Bangalore",
+            "Hyderabad",
+            "Remote"
         ]
     )
 
-# ============================================
-# STATUS
-# ============================================
+    status = st.selectbox(
+        "Application Status",
+        [
+            "Applied",
+            "HR Interview",
+            "Technical Round",
+            "Selected",
+            "Rejected"
+        ]
+    )
 
-status = st.selectbox(
-    "Application Status",
-    [
-        "Applied",
-        "HR Interview",
-        "Technical Round",
-        "Final Round",
-        "Hired",
-        "Rejected"
-    ]
-)
-
-# ============================================
+# =====================================================
 # RESUME UPLOAD
-# ============================================
+# =====================================================
 
 resume = st.file_uploader(
     "Upload Resume",
@@ -438,16 +387,13 @@ if resume is not None:
     resume_path = f"resumes/{resume.name}"
 
     with open(resume_path, "wb") as f:
+        f.write(resume.getbuffer())
 
-        f.write(
-            resume.getbuffer()
-        )
-
-# ============================================
+# =====================================================
 # SAVE BUTTON
-# ============================================
+# =====================================================
 
-if st.button("🚀 Save Candidate"):
+if st.button("💾 Save Candidate"):
 
     if candidate_name == "" or email == "":
 
@@ -458,15 +404,14 @@ if st.button("🚀 Save Candidate"):
     else:
 
         cursor.execute("""
+
         INSERT INTO candidates (
 
             Name,
-            Phone,
             Email,
             Role,
             Experience,
             Skills,
-            PreviousCompany,
             CurrentSalary,
             ExpectedSalary,
             ReferredBy,
@@ -478,16 +423,15 @@ if st.button("🚀 Save Candidate"):
 
         )
 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+
         """, (
 
             candidate_name,
-            phone,
             email,
             applied_role,
             experience,
             skills,
-            previous_company,
             current_salary,
             expected_salary,
             referred_by,
@@ -496,6 +440,7 @@ if st.button("🚀 Save Candidate"):
             location,
             status,
             resume_path
+
         ))
 
         conn.commit()
@@ -506,7 +451,4 @@ if st.button("🚀 Save Candidate"):
 
         st.balloons()
 
-st.markdown(
-    '</div>',
-    unsafe_allow_html=True
-)
+st.markdown("</div>", unsafe_allow_html=True)
