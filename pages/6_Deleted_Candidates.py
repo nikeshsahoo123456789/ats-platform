@@ -4,7 +4,7 @@ import pandas as pd
 from utils.database import (
     fetch_deleted_candidates,
     restore_candidate,
-    delete_permanently
+    permanently_delete_candidate
 )
 
 # ============================================
@@ -251,7 +251,6 @@ data = fetch_deleted_candidates()
 columns = [
 
     "ID",
-    "OriginalID",
     "Name",
     "Email",
     "Role",
@@ -319,11 +318,6 @@ st.divider()
 
 for _, row in df.iterrows():
 
-    st.markdown(
-        '<div class="card">',
-        unsafe_allow_html=True
-    )
-
     left, right = st.columns([4,1])
 
     # ========================================
@@ -389,9 +383,9 @@ for _, row in df.iterrows():
 
         if restore_btn:
 
-            candidate = tuple(row)
-
-            restore_candidate(candidate)
+            restore_candidate(
+                row["ID"]
+            )
 
             st.success(
                 f"{row['Name']} restored successfully"
@@ -412,7 +406,7 @@ for _, row in df.iterrows():
 
         if delete_btn:
 
-            delete_permanently(
+            permanently_delete_candidate(
                 row["ID"]
             )
 
@@ -422,7 +416,4 @@ for _, row in df.iterrows():
 
             st.rerun()
 
-    st.markdown(
-        "</div>",
-        unsafe_allow_html=True
-    )
+    st.divider()
