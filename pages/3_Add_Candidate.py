@@ -1,6 +1,5 @@
 import streamlit as st
 import sqlite3
-from utils.database import get_connection
 import os
 
 # =====================================================
@@ -18,6 +17,7 @@ st.set_page_config(
 # =====================================================
 
 if not os.path.exists("resumes"):
+
     os.makedirs("resumes")
 
 # =====================================================
@@ -39,93 +39,192 @@ st.markdown("""
 
 <style>
 
+/* =====================================================
+GLOBAL
+===================================================== */
+
 .stApp {
-    background: #f4f7fb;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef3f9,
+            #f8fbff
+        );
+
+    font-family: 'Segoe UI', sans-serif;
 }
 
 .block-container {
 
     max-width: 1500px;
 
-    padding-top: 2rem;
+    padding-top: 1rem !important;
 
-    padding-left: 4rem;
+    padding-left: 2.5rem !important;
 
-    padding-right: 4rem;
+    padding-right: 2.5rem !important;
 
-    padding-bottom: 4rem;
+    padding-bottom: 3rem !important;
 }
 
-/* HEADER */
+/* =====================================================
+REMOVE STREAMLIT SPACE
+===================================================== */
 
-.main-title {
+header {
+
+    background: transparent !important;
+}
+
+div[data-testid="stDecoration"] {
+
+    display: none !important;
+}
+
+/* =====================================================
+REMOVE EMPTY WHITE BLOCKS
+===================================================== */
+
+div[data-testid="stVerticalBlock"] > div:empty {
+
+    display: none !important;
+}
+
+/* =====================================================
+HERO SECTION
+===================================================== */
+
+.hero {
+
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #7c3aed
+        );
+
+    padding: 38px;
+
+    border-radius: 28px;
+
+    color: white;
+
+    margin-bottom: 28px;
+
+    position: relative;
+
+    overflow: hidden;
+
+    box-shadow:
+        0px 14px 35px rgba(79,70,229,0.24);
+}
+
+.hero::after {
+
+    content: "";
+
+    position: absolute;
+
+    top: -50px;
+
+    right: -50px;
+
+    width: 220px;
+
+    height: 220px;
+
+    background: rgba(255,255,255,0.08);
+
+    border-radius: 50%;
+}
+
+.hero-title {
 
     font-size: 42px;
 
     font-weight: 800;
 
-    color: #0f172a;
-
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
-.sub-title {
+.hero-sub {
 
-    font-size: 15px;
+    font-size: 16px;
 
-    color: #64748b;
+    opacity: 0.95;
+}
+
+/* =====================================================
+METRICS
+===================================================== */
+
+div[data-testid="metric-container"] {
+
+    background: rgba(255,255,255,0.72);
+
+    backdrop-filter: blur(14px);
+
+    border-radius: 22px;
+
+    padding: 24px;
+
+    border: 1px solid rgba(255,255,255,0.45);
+
+    box-shadow:
+        0px 10px 28px rgba(0,0,0,0.05);
+
+    transition: 0.3s;
+}
+
+div[data-testid="metric-container"]:hover {
+
+    transform: translateY(-4px);
+
+    box-shadow:
+        0px 18px 34px rgba(0,0,0,0.08);
+}
+
+/* =====================================================
+FORM CARD
+===================================================== */
+
+.form-card {
+
+    background: rgba(255,255,255,0.74);
+
+    backdrop-filter: blur(16px);
+
+    border-radius: 30px;
+
+    padding: 42px;
+
+    border: 1px solid rgba(255,255,255,0.45);
+
+    box-shadow:
+        0px 16px 40px rgba(0,0,0,0.05);
+
+    margin-top: 18px;
+}
+
+/* =====================================================
+SECTION TITLE
+===================================================== */
+
+.section-title {
+
+    font-size: 34px;
+
+    font-weight: 800;
+
+    color: #0f172a;
 
     margin-bottom: 35px;
 }
 
-/* METRICS */
-
-div[data-testid="metric-container"] {
-
-    background: white;
-
-    border-radius: 20px;
-
-    padding: 24px;
-
-    border: 1px solid #e2e8f0;
-
-    box-shadow:
-        0 8px 24px rgba(15,23,42,0.04);
-}
-
-/* FORM CARD */
-
-.form-card {
-
-    background: white;
-
-    border-radius: 30px;
-
-    padding: 50px;
-
-    border: 1px solid #e2e8f0;
-
-    box-shadow:
-        0 18px 40px rgba(15,23,42,0.05);
-
-    margin-top: 35px;
-}
-
-/* SECTION TITLE */
-
-.section-title {
-
-    font-size: 32px;
-
-    font-weight: 700;
-
-    color: #0f172a;
-
-    margin-bottom: 40px;
-}
-
-/* LABELS */
+/* =====================================================
+LABELS
+===================================================== */
 
 label {
 
@@ -136,89 +235,170 @@ label {
     color: #334155 !important;
 }
 
-/* COLUMN SPACING */
+/* =====================================================
+COLUMN SPACING
+===================================================== */
 
 div[data-testid="column"] {
 
-    padding-left: 12px;
+    padding-left: 10px;
 
-    padding-right: 12px;
+    padding-right: 10px;
 }
 
-/* INPUTS */
+/* =====================================================
+INPUTS
+===================================================== */
 
 .stTextInput input,
-.stSelectbox div[data-baseweb="select"] > div {
+.stSelectbox div[data-baseweb="select"] {
 
-    background: white !important;
+    background:
+        rgba(255,255,255,0.92) !important;
 
-    border: 1px solid #dbe4ee !important;
+    border:
+        1px solid #dbe4ee !important;
 
-    border-radius: 14px !important;
+    border-radius:
+        14px !important;
 
-    height: 54px !important;
+    min-height:
+        54px !important;
 
-    padding-left: 16px !important;
+    padding-left:
+        16px !important;
 
-    font-size: 15px !important;
+    font-size:
+        15px !important;
 
-    margin-bottom: 20px !important;
+    box-shadow:
+        none !important;
+
+    transition:
+        0.3s;
 }
 
-/* TEXTAREA */
+/* REMOVE INNER WHITE */
+
+.stSelectbox div {
+
+    background: transparent !important;
+}
+
+/* =====================================================
+TEXT AREA
+===================================================== */
 
 .stTextArea textarea {
 
-    background: white !important;
+    background:
+        rgba(255,255,255,0.92) !important;
 
-    border: 1px solid #dbe4ee !important;
+    border:
+        1px solid #dbe4ee !important;
 
-    border-radius: 16px !important;
+    border-radius:
+        16px !important;
 
-    min-height: 160px !important;
+    min-height:
+        180px !important;
 
-    padding: 16px !important;
+    padding:
+        18px !important;
 
-    font-size: 15px !important;
+    font-size:
+        15px !important;
 
-    margin-bottom: 20px !important;
+    line-height:
+        1.7 !important;
+
+    box-shadow:
+        none !important;
 }
 
-/* FOCUS */
+/* =====================================================
+FOCUS EFFECT
+===================================================== */
 
 .stTextInput input:focus,
 .stTextArea textarea:focus {
 
-    border: 1px solid #6366f1 !important;
+    border:
+        1px solid #7c3aed !important;
 
     box-shadow:
-        0 0 0 4px rgba(99,102,241,0.10) !important;
+        0 0 0 4px rgba(124,58,237,0.10) !important;
 }
 
-/* FILE */
+/* =====================================================
+DROPDOWN
+===================================================== */
+
+div[data-baseweb="popover"] {
+
+    border-radius: 16px !important;
+
+    overflow: hidden !important;
+
+    border: 1px solid #e5e7eb !important;
+
+    background: white !important;
+
+    box-shadow:
+        0px 14px 30px rgba(0,0,0,0.10) !important;
+}
+
+/* =====================================================
+OPTIONS
+===================================================== */
+
+li {
+
+    padding: 13px !important;
+
+    font-size: 14px !important;
+}
+
+li:hover {
+
+    background: #f3f0ff !important;
+
+    color: #6d28d9 !important;
+}
+
+/* =====================================================
+FILE UPLOADER
+===================================================== */
 
 [data-testid="stFileUploader"] {
 
-    background: #f8fafc !important;
+    background:
+        rgba(255,255,255,0.74) !important;
 
-    border: 2px dashed #cbd5e1 !important;
+    border:
+        2px dashed #cbd5e1 !important;
 
-    border-radius: 18px !important;
+    border-radius:
+        20px !important;
 
-    padding: 25px !important;
+    padding:
+        25px !important;
 
-    margin-top: 15px;
+    margin-top:
+        15px;
 }
 
-/* BUTTON */
+/* =====================================================
+BUTTON
+===================================================== */
 
 .stButton button {
 
     width: 100%;
 
-    height: 58px;
+    height: 60px;
 
-    border-radius: 16px;
+    border-radius: 18px;
 
     border: none !important;
 
@@ -231,11 +411,54 @@ div[data-testid="column"] {
 
     color: white !important;
 
-    font-size: 16px !important;
+    font-size: 17px !important;
 
     font-weight: 700 !important;
 
-    margin-top: 15px;
+    margin-top: 18px;
+
+    transition: 0.3s;
+
+    box-shadow:
+        0px 12px 28px rgba(79,70,229,0.25);
+}
+
+.stButton button:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0px 18px 34px rgba(79,70,229,0.32);
+}
+
+/* =====================================================
+BADGE
+===================================================== */
+
+.premium-badge {
+
+    display: inline-block;
+
+    padding: 8px 16px;
+
+    background: rgba(255,255,255,0.16);
+
+    border-radius: 999px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    margin-top: 10px;
+}
+
+/* =====================================================
+REMOVE HR SPACE
+===================================================== */
+
+hr {
+
+    display: none;
 }
 
 </style>
@@ -243,17 +466,26 @@ div[data-testid="column"] {
 """, unsafe_allow_html=True)
 
 # =====================================================
-# HEADER
+# HERO HEADER
 # =====================================================
 
 st.markdown("""
 
-<div class="main-title">
-🚀 AABsys Talent Management
+<div class="hero">
+
+<div class="hero-title">
+🚀 Add New Candidate
 </div>
 
-<div class="sub-title">
-Professional ATS Candidate Management Dashboard
+<div class="hero-sub">
+Create and manage candidate profiles with
+premium ATS recruitment workflow
+</div>
+
+<div class="premium-badge">
+✨ Smart Candidate Onboarding
+</div>
+
 </div>
 
 """, unsafe_allow_html=True)
@@ -262,26 +494,43 @@ Professional ATS Candidate Management Dashboard
 # METRICS
 # =====================================================
 
-cursor.execute("SELECT COUNT(*) FROM candidates")
+cursor.execute(
+    "SELECT COUNT(*) FROM candidates"
+)
 
 total_candidates = cursor.fetchone()[0]
 
 m1, m2, m3 = st.columns(3)
 
 with m1:
-    st.metric("Total Candidates", total_candidates)
+
+    st.metric(
+        "👥 Total Candidates",
+        total_candidates
+    )
 
 with m2:
-    st.metric("Resume Support", "PDF / DOCX")
+
+    st.metric(
+        "📄 Resume Support",
+        "PDF / DOCX"
+    )
 
 with m3:
-    st.metric("ATS Status", "Active")
+
+    st.metric(
+        "🟢 ATS Status",
+        "Active"
+    )
 
 # =====================================================
 # FORM CARD
 # =====================================================
 
-st.markdown('<div class="form-card">', unsafe_allow_html=True)
+st.markdown(
+    '<div class="form-card">',
+    unsafe_allow_html=True
+)
 
 st.markdown("""
 
@@ -295,7 +544,10 @@ st.markdown("""
 # FORM
 # =====================================================
 
-left, right = st.columns(2, gap="large")
+left, right = st.columns(
+    2,
+    gap="large"
+)
 
 # =====================================================
 # LEFT SIDE
@@ -354,8 +606,8 @@ with right:
         [
             "Bhubaneswar",
             "Berhampur",
-            "Bangalore",
-            "Hyderabad",
+            "Balasore",
+            "Noida",
             "Remote"
         ]
     )
@@ -366,13 +618,49 @@ with right:
             "Applied",
             "HR Interview",
             "Technical Round",
+            "Final Round",
+            "Hold",
             "Selected",
             "Rejected"
         ]
     )
 
 # =====================================================
-# RESUME UPLOAD
+# EXTRA PREMIUM FEATURES
+# =====================================================
+
+extra1, extra2 = st.columns(2)
+
+with extra1:
+
+    priority = st.selectbox(
+
+        "Candidate Priority",
+
+        [
+            "High",
+            "Medium",
+            "Low"
+        ]
+    )
+
+with extra2:
+
+    source = st.selectbox(
+
+        "Candidate Source",
+
+        [
+            "LinkedIn",
+            "Naukri",
+            "Referral",
+            "Walk-In",
+            "Company Website"
+        ]
+    )
+
+# =====================================================
+# RESUME
 # =====================================================
 
 resume = st.file_uploader(
@@ -387,10 +675,13 @@ if resume is not None:
     resume_path = f"resumes/{resume.name}"
 
     with open(resume_path, "wb") as f:
-        f.write(resume.getbuffer())
+
+        f.write(
+            resume.getbuffer()
+        )
 
 # =====================================================
-# SAVE BUTTON
+# SAVE
 # =====================================================
 
 if st.button("💾 Save Candidate"):
@@ -451,4 +742,7 @@ if st.button("💾 Save Candidate"):
 
         st.balloons()
 
-st.markdown("</div>", unsafe_allow_html=True)
+st.markdown(
+    "</div>",
+    unsafe_allow_html=True
+)

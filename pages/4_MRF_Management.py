@@ -6,6 +6,7 @@ import streamlit as st
 
 st.set_page_config(
     page_title="MRF Management",
+    page_icon="📄",
     layout="wide"
 )
 
@@ -22,7 +23,8 @@ sample_mrfs = [
         "type": "Experienced",
         "vacancies": 4,
         "reason": "New Position",
-        "status": "Open"
+        "status": "Open",
+        "priority": "High"
     },
 
     {
@@ -32,7 +34,8 @@ sample_mrfs = [
         "type": "Fresher",
         "vacancies": 2,
         "reason": "Replacement",
-        "status": "Closed"
+        "status": "Closed",
+        "priority": "Medium"
     },
 
     {
@@ -42,12 +45,13 @@ sample_mrfs = [
         "type": "Experienced",
         "vacancies": 1,
         "reason": "Expansion",
-        "status": "Open"
+        "status": "Open",
+        "priority": "Low"
     }
 ]
 
 # =========================================================
-# CUSTOM CSS
+# PREMIUM CSS
 # =========================================================
 
 st.markdown("""
@@ -58,75 +62,177 @@ GLOBAL
 ========================================================= */
 
 .stApp {
-    background-color: #f4f7fb;
-}
 
-.block-container {
+    background:
+        linear-gradient(
+            135deg,
+            #eef3f9,
+            #f8fbff
+        );
 
-    padding-top: 1rem;
-
-    padding-left: 2rem;
-
-    padding-right: 2rem;
-
-    padding-bottom: 2rem;
+    font-family: 'Segoe UI', sans-serif;
 }
 
 /* =========================================================
-REMOVE STREAMLIT TOP SPACE
+CONTAINER
+========================================================= */
+
+.block-container {
+
+    padding-top: 1rem !important;
+
+    padding-left: 2.5rem !important;
+
+    padding-right: 2.5rem !important;
+
+    padding-bottom: 2rem !important;
+
+    max-width: 1500px;
+}
+
+/* =========================================================
+REMOVE STREAMLIT SPACE
 ========================================================= */
 
 header {
+
     background: transparent !important;
 }
 
 div[data-testid="stDecoration"] {
+
     display: none !important;
 }
 
 /* =========================================================
-SEARCH BAR
+REMOVE EMPTY WHITE BLOCKS
 ========================================================= */
 
-.stTextInput input {
+div[data-testid="stVerticalBlock"] > div:empty {
 
-    background: white !important;
-
-    border: 1px solid #dbe4ee !important;
-
-    border-radius: 14px !important;
-
-    height: 52px !important;
-
-    padding-left: 15px !important;
-
-    font-size: 15px !important;
+    display: none !important;
 }
 
 /* =========================================================
-BUTTONS
+HERO SECTION
 ========================================================= */
 
-.stButton button {
+.hero {
 
-    background: white;
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #7c3aed
+        );
 
-    border: 1px solid #dbe4ee;
+    padding: 42px;
 
-    border-radius: 12px;
+    border-radius: 30px;
 
-    height: 50px;
+    color: white;
+
+    margin-bottom: 28px;
+
+    position: relative;
+
+    overflow: hidden;
+
+    box-shadow:
+        0px 18px 40px rgba(79,70,229,0.24);
+}
+
+.hero::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: -60px;
+
+    right: -60px;
+
+    width: 240px;
+
+    height: 240px;
+
+    background: rgba(255,255,255,0.08);
+
+    border-radius: 50%;
+}
+
+.hero::after {
+
+    content: "";
+
+    position: absolute;
+
+    bottom: -40px;
+
+    left: -40px;
+
+    width: 180px;
+
+    height: 180px;
+
+    background: rgba(255,255,255,0.05);
+
+    border-radius: 50%;
+}
+
+.hero-title {
+
+    font-size: 46px;
+
+    font-weight: 800;
+
+    margin-bottom: 12px;
+
+    position: relative;
+
+    z-index: 2;
+}
+
+.hero-sub {
+
+    font-size: 17px;
+
+    opacity: 0.96;
+
+    line-height: 1.8;
+
+    position: relative;
+
+    z-index: 2;
+}
+
+/* =========================================================
+PREMIUM BADGE
+========================================================= */
+
+.premium-badge {
+
+    display: inline-block;
+
+    margin-top: 18px;
+
+    padding: 10px 18px;
+
+    background: rgba(255,255,255,0.14);
+
+    border: 1px solid rgba(255,255,255,0.18);
+
+    backdrop-filter: blur(10px);
+
+    border-radius: 999px;
+
+    font-size: 13px;
 
     font-weight: 700;
 
-    transition: 0.3s;
-}
+    position: relative;
 
-.stButton button:hover {
-
-    border: 1px solid #4a90e2;
-
-    color: #4a90e2;
+    z-index: 2;
 }
 
 /* =========================================================
@@ -135,30 +241,414 @@ METRIC CARDS
 
 [data-testid="metric-container"] {
 
-    background: white;
+    background:
+        rgba(255,255,255,0.74);
 
-    border: 1px solid #dbe4ee;
+    backdrop-filter:
+        blur(14px);
 
-    padding: 15px;
+    border-radius:
+        24px;
 
-    border-radius: 16px;
+    padding:
+        26px;
+
+    border:
+        1px solid rgba(255,255,255,0.5);
 
     box-shadow:
-        0px 3px 10px rgba(0,0,0,0.04);
+        0px 10px 28px rgba(0,0,0,0.05);
+
+    transition:
+        0.3s;
+}
+
+[data-testid="metric-container"]:hover {
+
+    transform:
+        translateY(-5px);
+
+    box-shadow:
+        0px 20px 36px rgba(0,0,0,0.08);
+}
+
+/* =========================================================
+SECTION TITLE
+========================================================= */
+
+.section-title {
+
+    font-size: 34px;
+
+    font-weight: 800;
+
+    color: #111827;
+
+    margin-top: 20px;
+
+    margin-bottom: 20px;
+}
+
+/* =========================================================
+SEARCH INPUT
+========================================================= */
+
+.stTextInput input {
+
+    background:
+        rgba(255,255,255,0.92) !important;
+
+    border:
+        1px solid #dbe4ee !important;
+
+    border-radius:
+        16px !important;
+
+    height:
+        56px !important;
+
+    padding-left:
+        18px !important;
+
+    font-size:
+        15px !important;
+
+    box-shadow:
+        none !important;
+}
+
+/* =========================================================
+SELECTBOX
+========================================================= */
+
+.stSelectbox div[data-baseweb="select"] {
+
+    background:
+        rgba(255,255,255,0.92) !important;
+
+    border:
+        1px solid #dbe4ee !important;
+
+    border-radius:
+        16px !important;
+
+    min-height:
+        56px !important;
+
+    box-shadow:
+        none !important;
+}
+
+.stSelectbox div {
+
+    background:
+        transparent !important;
+}
+
+/* =========================================================
+DROPDOWN
+========================================================= */
+
+div[data-baseweb="popover"] {
+
+    border-radius:
+        18px !important;
+
+    overflow:
+        hidden !important;
+
+    border:
+        1px solid #e5e7eb !important;
+
+    background:
+        white !important;
+
+    box-shadow:
+        0px 16px 34px rgba(0,0,0,0.10) !important;
+}
+
+/* =========================================================
+OPTIONS
+========================================================= */
+
+li {
+
+    padding:
+        14px !important;
+
+    font-size:
+        14px !important;
+}
+
+li:hover {
+
+    background:
+        #f3f0ff !important;
+
+    color:
+        #6d28d9 !important;
+}
+
+/* =========================================================
+CARDS
+========================================================= */
+
+.mrf-card {
+
+    background:
+        rgba(255,255,255,0.76);
+
+    backdrop-filter:
+        blur(14px);
+
+    border-radius:
+        26px;
+
+    padding:
+        32px;
+
+    border:
+        1px solid rgba(255,255,255,0.5);
+
+    margin-bottom:
+        26px;
+
+    box-shadow:
+        0px 12px 30px rgba(0,0,0,0.05);
+
+    transition:
+        0.3s;
+}
+
+.mrf-card:hover {
+
+    transform:
+        translateY(-6px);
+
+    box-shadow:
+        0px 22px 40px rgba(0,0,0,0.08);
+}
+
+/* =========================================================
+STATUS BADGES
+========================================================= */
+
+.open-badge {
+
+    background:
+        linear-gradient(
+            135deg,
+            #dcfce7,
+            #bbf7d0
+        );
+
+    color:
+        #166534;
+
+    padding:
+        12px 20px;
+
+    border-radius:
+        14px;
+
+    font-weight:
+        700;
+
+    text-align:
+        center;
+
+    box-shadow:
+        0px 4px 12px rgba(34,197,94,0.18);
+}
+
+.closed-badge {
+
+    background:
+        linear-gradient(
+            135deg,
+            #fee2e2,
+            #fecaca
+        );
+
+    color:
+        #991b1b;
+
+    padding:
+        12px 20px;
+
+    border-radius:
+        14px;
+
+    font-weight:
+        700;
+
+    text-align:
+        center;
+
+    box-shadow:
+        0px 4px 12px rgba(239,68,68,0.18);
+}
+
+/* =========================================================
+PRIORITY TAGS
+========================================================= */
+
+.high {
+
+    background:
+        linear-gradient(
+            135deg,
+            #fee2e2,
+            #fecaca
+        );
+
+    color:
+        #991b1b;
+
+    padding:
+        8px 16px;
+
+    border-radius:
+        12px;
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+}
+
+.medium {
+
+    background:
+        linear-gradient(
+            135deg,
+            #fef3c7,
+            #fde68a
+        );
+
+    color:
+        #92400e;
+
+    padding:
+        8px 16px;
+
+    border-radius:
+        12px;
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+}
+
+.low {
+
+    background:
+        linear-gradient(
+            135deg,
+            #dcfce7,
+            #bbf7d0
+        );
+
+    color:
+        #166534;
+
+    padding:
+        8px 16px;
+
+    border-radius:
+        12px;
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+}
+
+/* =========================================================
+BUTTON
+========================================================= */
+
+.stButton button {
+
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #7c3aed
+        );
+
+    color:
+        white;
+
+    border:
+        none;
+
+    border-radius:
+        16px;
+
+    height:
+        54px;
+
+    font-weight:
+        700;
+
+    transition:
+        0.3s;
+
+    box-shadow:
+        0px 12px 26px rgba(79,70,229,0.24);
+}
+
+.stButton button:hover {
+
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        0px 20px 36px rgba(79,70,229,0.30);
+}
+
+/* =========================================================
+REMOVE HR SPACE
+========================================================= */
+
+hr {
+
+    display: none;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
 # =========================================================
-# PAGE TITLE
+# HERO
 # =========================================================
 
-st.title("📄 MRF Management")
+st.markdown("""
 
-st.caption(
-    "Manage manpower requisition requests"
-)
+<div class="hero">
+
+<div class="hero-title">
+📄 MRF Management
+</div>
+
+<div class="hero-sub">
+Manage manpower requisition workflows with
+smart recruitment tracking, hiring analytics
+and premium ATS management experience
+</div>
+
+<div class="premium-badge">
+✨ Enterprise Recruitment Dashboard
+</div>
+
+</div>
+
+""", unsafe_allow_html=True)
 
 # =========================================================
 # METRICS
@@ -190,38 +680,25 @@ experienced_count = len(
 m1, m2, m3, m4 = st.columns(4)
 
 with m1:
-
-    st.metric(
-        "Total MRF",
-        total_mrf
-    )
+    st.metric("📋 Total MRF", total_mrf)
 
 with m2:
-
-    st.metric(
-        "Open",
-        open_count
-    )
+    st.metric("🟢 Open", open_count)
 
 with m3:
-
-    st.metric(
-        "Closed",
-        closed_count
-    )
+    st.metric("🔴 Closed", closed_count)
 
 with m4:
-
-    st.metric(
-        "Experienced",
-        experienced_count
-    )
-
-st.divider()
+    st.metric("⭐ Experienced", experienced_count)
 
 # =========================================================
-# FILTER BUTTONS
+# FILTERS
 # =========================================================
+
+st.markdown(
+    '<div class="section-title">🔎 Filter MRF Records</div>',
+    unsafe_allow_html=True
+)
 
 c1, c2, c3, c4 = st.columns(4)
 
@@ -255,7 +732,8 @@ with c3:
             "All",
             "Bhubaneswar",
             "Berhampur",
-            "Balasore"
+            "Balasore",
+            "Noida"
         ]
     )
 
@@ -276,7 +754,7 @@ search = st.text_input(
 )
 
 # =========================================================
-# FILTER DATA
+# FILTER
 # =========================================================
 
 filtered_mrfs = []
@@ -284,40 +762,39 @@ filtered_mrfs = []
 for mrf in sample_mrfs:
 
     if search.lower() not in mrf["position"].lower():
-
         continue
 
     if (
         type_filter != "All"
         and mrf["type"] != type_filter
     ):
-
         continue
 
     if (
         status_filter != "All"
         and mrf["status"] != status_filter
     ):
-
         continue
 
     if (
         branch_filter != "All"
         and mrf["branch"] != branch_filter
     ):
-
         continue
 
     filtered_mrfs.append(mrf)
 
 # =========================================================
-# SECTION TITLE
+# TITLE
 # =========================================================
 
-st.subheader("📋 MRF Records")
+st.markdown(
+    '<div class="section-title">📋 MRF Records</div>',
+    unsafe_allow_html=True
+)
 
 # =========================================================
-# EMPTY STATE
+# EMPTY
 # =========================================================
 
 if len(filtered_mrfs) == 0:
@@ -327,91 +804,92 @@ if len(filtered_mrfs) == 0:
     )
 
 # =========================================================
-# SHOW MRF CARDS
+# CARDS
 # =========================================================
 
 for mrf in filtered_mrfs:
 
-    with st.container():
+    st.markdown(
+        '<div class="mrf-card">',
+        unsafe_allow_html=True
+    )
 
-        st.markdown("""
-        <div style="
-            background:white;
-            padding:24px;
-            border-radius:18px;
-            border:1px solid #dbe4ee;
-            margin-bottom:18px;
-            box-shadow:0px 3px 10px rgba(0,0,0,0.04);
-        ">
-        """, unsafe_allow_html=True)
+    top1, top2 = st.columns([4,1])
 
-        top1, top2 = st.columns([4,1])
-
-        # =================================================
-        # LEFT
-        # =================================================
-
-        with top1:
-
-            st.markdown(
-                f"### {mrf['position']}"
-            )
-
-            st.caption(
-                f"{mrf['department']} • {mrf['branch']}"
-            )
-
-        # =================================================
-        # RIGHT
-        # =================================================
-
-        with top2:
-
-            if mrf["status"] == "Open":
-
-                st.success("Open")
-
-            else:
-
-                st.error("Closed")
-
-        st.write("")
-
-        g1, g2, g3, g4 = st.columns(4)
-
-        with g1:
-
-            st.write("Candidate Type")
-
-            st.markdown(
-                f"**{mrf['type']}**"
-            )
-
-        with g2:
-
-            st.write("Vacancies")
-
-            st.markdown(
-                f"**{mrf['vacancies']}**"
-            )
-
-        with g3:
-
-            st.write("Recruitment Reason")
-
-            st.markdown(
-                f"**{mrf['reason']}**"
-            )
-
-        with g4:
-
-            st.write("Current Status")
-
-            st.markdown(
-                f"**{mrf['status']}**"
-            )
+    with top1:
 
         st.markdown(
-            "</div>",
+            f"## {mrf['position']}"
+        )
+
+        st.caption(
+            f"{mrf['department']} • {mrf['branch']}"
+        )
+
+    with top2:
+
+        if mrf["status"] == "Open":
+
+            st.markdown(
+                '<div class="open-badge">Open</div>',
+                unsafe_allow_html=True
+            )
+
+        else:
+
+            st.markdown(
+                '<div class="closed-badge">Closed</div>',
+                unsafe_allow_html=True
+            )
+
+    st.write("")
+
+    g1, g2, g3, g4, g5 = st.columns(5)
+
+    with g1:
+
+        st.write("Candidate Type")
+
+        st.markdown(
+            f"**{mrf['type']}**"
+        )
+
+    with g2:
+
+        st.write("Vacancies")
+
+        st.markdown(
+            f"**{mrf['vacancies']}**"
+        )
+
+    with g3:
+
+        st.write("Recruitment Reason")
+
+        st.markdown(
+            f"**{mrf['reason']}**"
+        )
+
+    with g4:
+
+        st.write("Current Status")
+
+        st.markdown(
+            f"**{mrf['status']}**"
+        )
+
+    with g5:
+
+        st.write("Priority")
+
+        priority_class = mrf["priority"].lower()
+
+        st.markdown(
+            f'<span class="{priority_class}">{mrf["priority"]}</span>',
             unsafe_allow_html=True
         )
+
+    st.markdown(
+        '</div>',
+        unsafe_allow_html=True
+    )

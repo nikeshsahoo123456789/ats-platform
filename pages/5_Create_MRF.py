@@ -1,6 +1,5 @@
 import streamlit as st
 import sqlite3
-from utils.database import get_connection
 import os
 from datetime import datetime
 
@@ -164,7 +163,7 @@ maintain employee records and support HR operations.
 }
 
 # ============================================
-# MODERN PREMIUM UI
+# PREMIUM UI
 # ============================================
 
 st.markdown("""
@@ -178,33 +177,56 @@ GLOBAL
 
     background:
         linear-gradient(
-            to bottom right,
-            #f6f9fc,
-            #edf3fa
+            135deg,
+            #eef3f9,
+            #f8fbff
         );
 
     font-family: 'Segoe UI', sans-serif;
 }
 
 /* ============================================
-MAIN CONTAINER
+REMOVE TOP SPACE
 ============================================ */
 
 .block-container {
 
-    padding-top: 2rem !important;
+    padding-top: 1rem !important;
 
-    padding-left: 3rem !important;
+    padding-bottom: 2rem !important;
 
-    padding-right: 3rem !important;
+    padding-left: 2.5rem !important;
 
-    padding-bottom: 3rem !important;
+    padding-right: 2.5rem !important;
 
-    max-width: 1550px;
+    max-width: 1500px;
 }
 
 /* ============================================
-TOP HERO
+REMOVE EMPTY WHITE BLOCKS
+============================================ */
+
+div[data-testid="stVerticalBlock"] > div:empty {
+
+    display: none !important;
+}
+
+/* ============================================
+REMOVE STREAMLIT SPACE
+============================================ */
+
+header {
+
+    background: transparent !important;
+}
+
+div[data-testid="stDecoration"] {
+
+    display: none !important;
+}
+
+/* ============================================
+HERO SECTION
 ============================================ */
 
 .hero {
@@ -212,20 +234,62 @@ TOP HERO
     background:
         linear-gradient(
             135deg,
-            #4a90e2,
-            #6ea8f1
+            #4f46e5,
+            #7c3aed
         );
 
     padding: 42px;
 
-    border-radius: 28px;
+    border-radius: 30px;
 
     color: white;
 
-    margin-bottom: 35px;
+    margin-bottom: 30px;
 
     box-shadow:
-        0px 12px 30px rgba(74,144,226,0.22);
+        0px 18px 40px rgba(79,70,229,0.24);
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+.hero::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: -60px;
+
+    right: -60px;
+
+    width: 240px;
+
+    height: 240px;
+
+    background: rgba(255,255,255,0.08);
+
+    border-radius: 50%;
+}
+
+.hero::after {
+
+    content: "";
+
+    position: absolute;
+
+    bottom: -50px;
+
+    left: -50px;
+
+    width: 180px;
+
+    height: 180px;
+
+    background: rgba(255,255,255,0.05);
+
+    border-radius: 50%;
 }
 
 .hero-title {
@@ -234,39 +298,53 @@ TOP HERO
 
     font-weight: 800;
 
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+
+    position: relative;
+
+    z-index: 2;
 }
 
 .hero-sub {
 
-    font-size: 18px;
+    font-size: 16px;
 
-    opacity: 0.95;
+    opacity: 0.96;
+
+    line-height: 1.8;
+
+    position: relative;
+
+    z-index: 2;
 }
 
 /* ============================================
-METRIC CARDS
+PREMIUM BADGE
 ============================================ */
 
-[data-testid="metric-container"] {
+.premium-badge {
 
-    background: white;
+    display: inline-block;
 
-    padding: 28px;
+    margin-top: 18px;
 
-    border-radius: 22px;
+    padding: 10px 18px;
 
-    border: 1px solid #e5edf5;
+    background: rgba(255,255,255,0.14);
 
-    box-shadow:
-        0px 6px 18px rgba(0,0,0,0.04);
+    border: 1px solid rgba(255,255,255,0.18);
 
-    transition: 0.3s;
-}
+    backdrop-filter: blur(10px);
 
-[data-testid="metric-container"]:hover {
+    border-radius: 999px;
 
-    transform: translateY(-4px);
+    font-size: 13px;
+
+    font-weight: 700;
+
+    position: relative;
+
+    z-index: 2;
 }
 
 /* ============================================
@@ -275,18 +353,26 @@ FORM CONTAINER
 
 .form-container {
 
-    background: white;
+    background:
+        rgba(255,255,255,0.76);
 
-    padding: 45px;
+    backdrop-filter:
+        blur(16px);
 
-    border-radius: 30px;
+    padding:
+        38px;
 
-    border: 1px solid #e5edf5;
+    border-radius:
+        28px;
+
+    border:
+        1px solid rgba(255,255,255,0.45);
 
     box-shadow:
-        0px 12px 28px rgba(0,0,0,0.05);
+        0px 12px 32px rgba(0,0,0,0.05);
 
-    margin-top: 25px;
+    margin-top:
+        10px;
 }
 
 /* ============================================
@@ -295,13 +381,13 @@ SECTION TITLE
 
 .section-title {
 
-    font-size: 30px;
+    font-size: 32px;
 
     font-weight: 800;
 
-    color: #1f2937;
+    color: #111827;
 
-    margin-bottom: 35px;
+    margin-bottom: 28px;
 }
 
 /* ============================================
@@ -310,11 +396,11 @@ LABELS
 
 label {
 
-    font-size: 15px !important;
+    color: #374151 !important;
+
+    font-size: 14px !important;
 
     font-weight: 700 !important;
-
-    color: #344054 !important;
 }
 
 /* ============================================
@@ -324,17 +410,26 @@ INPUTS
 .stTextInput input,
 .stNumberInput input {
 
-    height: 62px !important;
+    background:
+        rgba(255,255,255,0.92) !important;
 
-    border-radius: 16px !important;
+    border:
+        1px solid #dbe4ee !important;
 
-    border: 1px solid #d9e2ec !important;
+    border-radius:
+        14px !important;
 
-    background: #fbfdff !important;
+    height:
+        54px !important;
 
-    padding-left: 18px !important;
+    padding-left:
+        16px !important;
 
-    font-size: 15px !important;
+    font-size:
+        15px !important;
+
+    box-shadow:
+        none !important;
 }
 
 /* ============================================
@@ -343,15 +438,70 @@ SELECTBOX
 
 .stSelectbox div[data-baseweb="select"] {
 
-    min-height: 62px !important;
+    background:
+        rgba(255,255,255,0.92) !important;
 
-    border-radius: 16px !important;
+    border-radius:
+        14px !important;
 
-    border: 1px solid #d9e2ec !important;
+    border:
+        1px solid #dbe4ee !important;
 
-    background: #fbfdff !important;
+    min-height:
+        54px !important;
 
-    font-size: 15px !important;
+    box-shadow:
+        none !important;
+}
+
+.stSelectbox div {
+
+    background:
+        transparent !important;
+}
+
+/* ============================================
+DROPDOWN
+============================================ */
+
+div[data-baseweb="popover"] {
+
+    border-radius:
+        18px !important;
+
+    overflow:
+        hidden !important;
+
+    border:
+        1px solid #e5e7eb !important;
+
+    background:
+        white !important;
+
+    box-shadow:
+        0px 16px 34px rgba(0,0,0,0.10) !important;
+}
+
+/* ============================================
+OPTIONS
+============================================ */
+
+li {
+
+    padding:
+        14px !important;
+
+    font-size:
+        14px !important;
+}
+
+li:hover {
+
+    background:
+        #f3f0ff !important;
+
+    color:
+        #6d28d9 !important;
 }
 
 /* ============================================
@@ -360,17 +510,23 @@ TEXT AREA
 
 .stTextArea textarea {
 
-    border-radius: 18px !important;
+    background:
+        rgba(255,255,255,0.92) !important;
 
-    border: 1px solid #d9e2ec !important;
+    border-radius:
+        16px !important;
 
-    background: #fbfdff !important;
+    border:
+        1px solid #dbe4ee !important;
 
-    padding: 20px !important;
+    padding:
+        18px !important;
 
-    font-size: 15px !important;
+    line-height:
+        1.8 !important;
 
-    line-height: 1.8 !important;
+    font-size:
+        14px !important;
 }
 
 /* ============================================
@@ -379,13 +535,17 @@ UPLOAD BOX
 
 [data-testid="stFileUploader"] {
 
-    border-radius: 18px;
+    border-radius:
+        18px;
 
-    border: 2px dashed #c7d7ea;
+    border:
+        2px dashed #dbe4ee;
 
-    background: #f9fbff;
+    background:
+        rgba(255,255,255,0.74);
 
-    padding: 25px;
+    padding:
+        18px;
 }
 
 /* ============================================
@@ -394,13 +554,14 @@ INFO BOX
 
 [data-testid="stAlert"] {
 
-    border-radius: 18px;
+    border-radius:
+        16px;
 
-    padding: 18px;
+    background:
+        #eef2ff;
 
-    border: none;
-
-    background: #eef5ff;
+    border:
+        none;
 }
 
 /* ============================================
@@ -412,64 +573,74 @@ BUTTON
     background:
         linear-gradient(
             135deg,
-            #4a90e2,
-            #6ea8f1
+            #4f46e5,
+            #7c3aed
         );
 
-    color: white;
+    color:
+        white;
 
-    border: none;
+    border:
+        none;
 
-    border-radius: 18px;
+    border-radius:
+        16px;
 
-    height: 64px;
+    height:
+        56px;
 
-    width: 100%;
+    width:
+        100%;
 
-    font-size: 18px;
+    font-size:
+        16px;
 
-    font-weight: 700;
+    font-weight:
+        700;
 
-    margin-top: 20px;
+    transition:
+        0.3s;
 
     box-shadow:
-        0px 10px 20px rgba(74,144,226,0.25);
-
-    transition: 0.3s;
+        0px 12px 28px rgba(79,70,229,0.26);
 }
 
 .stButton button:hover {
 
-    transform: translateY(-3px);
+    transform:
+        translateY(-3px);
 
     box-shadow:
-        0px 14px 30px rgba(74,144,226,0.35);
+        0px 20px 38px rgba(79,70,229,0.32);
 }
 
 /* ============================================
-SPACING
+COLUMN SPACING
 ============================================ */
 
 div[data-testid="column"] {
 
-    padding-left: 12px;
+    padding-left: 8px;
 
-    padding-right: 12px;
+    padding-right: 8px;
 }
 
 /* ============================================
-DIVIDER
+REMOVE EXTRA GAPS
+============================================ */
+
+.element-container {
+
+    margin-bottom: 0.5rem !important;
+}
+
+/* ============================================
+REMOVE HORIZONTAL LINE SPACE
 ============================================ */
 
 hr {
 
-    margin-top: 35px;
-
-    margin-bottom: 35px;
-
-    border: none;
-
-    border-top: 1px solid #edf2f7;
+    display: none;
 }
 
 </style>
@@ -490,56 +661,16 @@ st.markdown("""
 <div class="hero-sub">
 Create intelligent manpower requisition forms
 with AI-powered hiring assistance
+and premium recruitment workflow experience
+</div>
+
+<div class="premium-badge">
+✨ Enterprise Hiring Workflow
 </div>
 
 </div>
 
 """, unsafe_allow_html=True)
-
-# ============================================
-# METRICS
-# ============================================
-
-cursor.execute(
-    "SELECT COUNT(*) FROM mrf_requests"
-)
-
-total_mrf = cursor.fetchone()[0]
-
-cursor.execute(
-    "SELECT COUNT(*) FROM mrf_requests WHERE status='Open'"
-)
-
-open_mrf = cursor.fetchone()[0]
-
-cursor.execute(
-    "SELECT COUNT(*) FROM mrf_requests WHERE status='Closed'"
-)
-
-closed_mrf = cursor.fetchone()[0]
-
-m1, m2, m3 = st.columns(3)
-
-with m1:
-
-    st.metric(
-        "📋 Total MRF",
-        total_mrf
-    )
-
-with m2:
-
-    st.metric(
-        "🟢 Open Positions",
-        open_mrf
-    )
-
-with m3:
-
-    st.metric(
-        "🔴 Closed Positions",
-        closed_mrf
-    )
 
 # ============================================
 # FORM CONTAINER
@@ -556,7 +687,7 @@ st.markdown(
 )
 
 # ============================================
-# ROLE SELECTION
+# FIRST ROW
 # ============================================
 
 col1, col2 = st.columns(2)
@@ -564,9 +695,7 @@ col1, col2 = st.columns(2)
 with col1:
 
     position = st.selectbox(
-
         "Position Title",
-
         list(job_templates.keys())
     )
 
@@ -602,7 +731,7 @@ with col2:
     )
 
 # ============================================
-# AI SKILL SUGGESTION
+# AI SKILLS
 # ============================================
 
 st.info(
@@ -624,9 +753,7 @@ with col3:
             "Bhubaneswar",
             "Berhampur",
             "Balasore",
-            "Bangalore",
-            "Hyderabad",
-            "Pune"
+            "Noida"
         ]
     )
 
@@ -654,6 +781,11 @@ with col5:
         step=1
     )
 
+    budget = st.text_input(
+        "Salary Budget",
+        placeholder="Example: 6 LPA - 9 LPA"
+    )
+
 with col6:
 
     work_mode = st.selectbox(
@@ -675,6 +807,17 @@ with col6:
         )
     )
 
+    priority = st.selectbox(
+
+        "Hiring Priority",
+
+        [
+            "High",
+            "Medium",
+            "Low"
+        ]
+    )
+
 # ============================================
 # FOURTH ROW
 # ============================================
@@ -691,10 +834,20 @@ with col7:
 with col8:
 
     experience = st.text_input(
-
         "Minimum Experience",
-
         value=selected_template["experience"]
+    )
+
+    joining_time = st.selectbox(
+
+        "Expected Joining Timeline",
+
+        [
+            "Immediate",
+            "15 Days",
+            "30 Days",
+            "60 Days"
+        ]
     )
 
 # ============================================
